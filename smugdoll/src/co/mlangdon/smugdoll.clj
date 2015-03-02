@@ -99,7 +99,7 @@
       (do
 		    (println (format "    %s" i))
 		    (println))) 
-    (println (apply format "    %-9s%5s%6s" header))
+    (println (apply format "    %-8s%5s%6s" header))
     (doseq
       [i output]
       (println (format "    %-8s%5d%6d" (i 0) (i 1) (i 2))))
