@@ -105,6 +105,7 @@
       (println (format "    %-8s%5d%6d" (i 0) (i 1) (i 2))))
     (println)))
 
+(comment "Convenience function to easily run the algo.")
 (defn knapsack [items weight]
    (find-optimum (make-dynamic-table items weight) items weight))
 

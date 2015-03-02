@@ -175,7 +175,7 @@
 (deftest weight-limit-observed
   (testing
     "that maximum weight is not exceeded"
-    (is (=
+    (is (<=
           1000
           (reduce + 
             (map (fn [x] (x 1))
