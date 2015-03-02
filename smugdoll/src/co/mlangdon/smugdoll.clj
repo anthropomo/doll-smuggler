@@ -29,7 +29,7 @@
 	["eddie" 7 20]
 	["tory" 18 12]
 	["sally" 4 50]
-	["babe" 30 10]] )
+	["babe" 30 10]])
 
 (def max-weight 400)
 
@@ -63,14 +63,11 @@
                       ; + value of this item
                       (+
                         ((v (- d 1)) (- w ((items (- d 1)) 1)))
-		                    ((items (- d 1)) 2)
-                      )))) 
-                (inc w)
-              )
+		                    ((items (- d 1)) 2))))) 
+                (inc w))
               ; make the our transient vector persistent before passing it to the outer loop
 		          (persistent! u))))
-        (inc d)
-      )      
+        (inc d))      
       (persistent! v))))
 
 (comment "Makes sense of table from 'make-dynamic-table'.")
@@ -92,8 +89,7 @@
 	        (if add
 	          (conj! results (items (- cnt 1)))
 	          results)))
-      (persistent! results)))
-  )
+      (persistent! results))))
 
 (comment "Prints the input and output in the format shown in the original repo.")
 (defn pretty-print [preamble header output]
@@ -107,12 +103,10 @@
     (doseq
       [i output]
       (println (format "    %-8s%5d%6d" (i 0) (i 1) (i 2))))
-    (println)
-))
+    (println)))
 
 (defn knapsack [items weight]
-   (find-optimum (make-dynamic-table items weight) items weight)
-)
+   (find-optimum (make-dynamic-table items weight) items weight))
 
 (defn -main
   "A solution to https://github.com/micahalles/doll-smuggler"
@@ -123,8 +117,7 @@
   (pretty-print
     '("max weight: 400" "available dolls:")
     '("name" "weight" "value")
-    dolls
-    )
+    dolls)
   (pretty-print 
     '("packed dolls:")
     '("name" "weight" "value")

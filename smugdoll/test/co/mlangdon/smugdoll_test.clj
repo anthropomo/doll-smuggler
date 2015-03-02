@@ -13,6 +13,14 @@
          ["grumpkin" 42 70] ["marc" 11 70] ["randal" 27 60] ["puppy" 15 60] 
          ["dorothy" 50 160] ["candice" 153 200] ["anthony" 13 35] ["luke" 9 150]]))))
 
+(deftest table-size
+  (testing
+    "table size matches expectations"
+    (let [table (make-dynamic-table dolls max-weight)]
+      (are [x y] (= x y)
+           (+ 1 (count dolls)) (count table)
+           (+ 1 max-weight) (count (table 22))))))
+
 (def rand-set 
   [["i0000" 122 281] ["i0001" 98 221] ["i0002" 126 211] ["i0003" 39 161] ["i0004" 47 86] ["i0005" 35 62] ["i0006" 7 85] ["i0007" 161 272]
 	["i0008" 174 64] ["i0009" 166 151] ["i0010" 9 157] ["i0011" 143 137] ["i0012" 46 124] ["i0013" 167 22] ["i0014" 196 296] ["i0015" 151 296]
@@ -162,9 +170,16 @@
             ["i0175" 1 52] ["i0161" 14 258] ["i0148" 20 285] ["i0147" 19 271] ["i0135" 14 169] ["i0132" 6 149]
             ["i0112" 1 64] ["i0110" 4 259] ["i0107" 3 184] ["i0106" 6 122] ["i0094" 3 270] ["i0086" 20 247]
             ["i0080" 3 255] ["i0065" 2 186] ["i0044" 10 125] ["i0041" 19 288] ["i0036" 25 292] ["i0032" 1 258]
-            ["i0031" 14 259] ["i0027" 18 198] ["i0022" 19 235] ["i0010" 9 157] ["i0006" 7 85]]
-    ))
-))
+            ["i0031" 14 259] ["i0027" 18 198] ["i0022" 19 235] ["i0010" 9 157] ["i0006" 7 85]]))))
+
+(deftest weight-limit-observed
+  (testing
+    "that maximum weight is not exceeded"
+    (is (=
+          1000
+          (reduce + 
+            (map (fn [x] (x 1))
+              (knapsack rand-set 1000)))))))
 
 (comment "Data set from: http://www.nitjsr.ac.in/faculty/courses/CA03_2_0-1%20Knapsack%20Problem.pdf ")
 (def net-set [["1" 1 15]
@@ -174,7 +189,7 @@
 
 (comment "Demonstrates our implementation works for a dataset that is easily human-verified.")
 (deftest smaller-set
-  (testing "small set from web"
+  (testing "with small set from web"
     (is (= (set (knapsack net-set 8))
            (set [["1" 1 15]
                   ["3" 3 9]
