@@ -61,6 +61,6 @@
 ```
     lein test co.mlangdon.smugdoll-test
 
-    Ran 2 tests containing 2 assertions.
+    Ran 3 tests containing 3 assertions.
     0 failures, 0 errors.
 ```    
