@@ -27,32 +27,36 @@
 
 (def max-weight 400)
 
-(defn make-table [dataset weight]
-  (to-array-2d (repeat (+ (count dataset) 1) (repeat (+ weight 1) 0 ))))
-
-(defn fill-table [table items weight]
-	(doseq 
-	  [d (range 1 (+ (count items) 1))] 
-	  (doseq
-	    [w (range 1 (+ weight 1))]
-	    (if (> ((items (- d 1)) 1) w)
-	      (aset table d w (aget table (- d 1) w))
-	      (aset 
-	        table d w 
-	        (max 
-	          (aget table (- d 1) w)
-	          (+ 
-	            (aget 
-	              table 
-	              (- d 1) 
-	              (- w ((items (- d 1)) 1)))
-	            ((items (- d 1)) 2)))))))
-  table)
+(defn make-dynamic-table [items weight]
+  (loop [v (transient [(vec(repeat (+ weight 1) 0))]) d 1]
+    (if (< d (+ (count items) 1))
+      (recur
+        (conj! v 
+          (loop [u (transient [0]) w 1]
+		        (if (< w (+ weight 1))
+		          (recur
+                (conj! u 
+                  (if (> ((items (- d 1)) 1) w)
+		                ((v (- d 1)) w)
+                    (max
+                      ((v (- d 1)) w)
+                      (+
+                        ((v (- d 1)) (- w ((items (- d 1)) 1)))
+		                    ((items (- d 1)) 2)
+                      )))) 
+                (inc w)
+              )
+		          (persistent! u))))
+        (inc d)
+      )      
+      (persistent! v))))
 
 (defn was-added [table cnt weight]
-  (not= (aget table cnt weight) (aget table (- cnt 1) weight)))
+  (not= (get (get table cnt) weight) (get (get table (- cnt 1)) weight)))
+  
 
-(defn find-optimum [table items weight]
+(defn find-optimum 
+  [table items weight]
   (loop [_weight weight cnt (count items) v (transient [])]
     (if (> cnt 0)
 	    (recur 
@@ -63,7 +67,8 @@
         (if (was-added table cnt _weight)
           (conj! v (items (- cnt 1)))
           v))
-      (persistent! v))))
+      (persistent! v)))
+  )
 
 (defn pretty-print [preamble header output]
   (do
@@ -80,7 +85,7 @@
 ))
 
 (defn knapsack [items weight]
-   (find-optimum (fill-table (make-table items weight) items weight) items weight)
+   (find-optimum (make-dynamic-table items weight) items weight)
 )
 
 (defn -main
