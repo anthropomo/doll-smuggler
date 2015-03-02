@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [co.mlangdon.smugdoll :refer :all]))
 
+(comment "The dataset and weight from the programming challenge.")
 (deftest base-problem
   (testing 
     "basic problem"
@@ -171,6 +172,7 @@
              ["3" 3 9]
              ["4" 4 5]])
 
+(comment "Demonstrates our implementation works for a dataset that is easily human-verified.")
 (deftest smaller-set
   (testing "small set from web"
     (is (= (set (knapsack net-set 8))
